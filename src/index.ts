@@ -42,8 +42,6 @@
                 } else {
 
                 }
-                console.dir(clipBox);
-                console.dir(dotBox);
                 this.DragEvent();
             };
         }
@@ -84,22 +82,36 @@
 
                             clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + startX - moveX,clipImgWStart + transXStart));
                             clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + startY - moveY,clipImgHStart + transYStart));
+
+                            if(this.config.scale) {
+                                clipImgH = clipImgW / this.config.scale;
+                                transY = transYStart + clipImgHStart - clipImgH;
+                            }
                             break;
                         case 'dotTopRight':
                             transY = Math.max(0,Math.min(transYStart + moveY - startY,clipImgHStart + transYStart - this.config.clipImgMinH));
 
                             clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + moveX - startX,clipBox.clientWidth - transX));
                             clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + startY - moveY,clipImgHStart + transYStart));
+
+                            if(this.config.scale) {
+                                clipImgH = clipImgW / this.config.scale;
+                                transY = transYStart + clipImgHStart - clipImgH;
+                            }
                             break;
                         case 'dotBottomLeft':
                             transX = Math.max(0,Math.min(transXStart + moveX - startX,clipImgWStart + transXStart - this.config.clipImgMinW));
 
                             clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + startX - moveX,clipImgWStart + transXStart));
                             clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + moveY - startY,clipBox.clientHeight - transY));
+
+                            if(this.config.scale) clipImgH = clipImgW /this.config.scale;
                             break;
                         case 'dotBottomRight':
                             clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + moveX - startX,clipBox.clientWidth - transX));
                             clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + moveY - startY,clipBox.clientHeight - transY));
+
+                            if(this.config.scale) clipImgH = clipImgW /this.config.scale;
                             break;
                         default:
                             transX = Math.max(0,Math.min(transXStart + moveX - startX,clipBox.clientWidth - dotBox.offsetWidth));
@@ -118,7 +130,6 @@
         }
 
         imgClip() {
-            console.log(transX,transY,clipImgW,clipImgH);
             dotBox.style.width = clipImgW + 'px';
             dotBox.style.height = clipImgH + 'px';
             dotBox.style.transform = `translate3d(${transX}px,${transY}px,0)`;
