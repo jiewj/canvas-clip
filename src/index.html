@@ -5,7 +5,21 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>canvas-clip</title>
+    <style>
+        .test {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            border: 1px solid #000;
+        }
+    </style>
 <body>
-<img src="" id="img" alt="">
+<div class="test" id="test"></div>
+<script>
+  new CanvasClip({
+    id: 'test',
+    imgUrl: './e_bw.jpg'
+  });
+</script>
 </body>
 </html>

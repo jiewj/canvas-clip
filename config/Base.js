@@ -26,17 +26,17 @@ class WebpackBaseConfig {
 
   get defaultSettings() {
     const cssModulesQuery = {
-      modules: true,
-      importLoaders: 2,
-      localIndentName: '[name]-[local]-[hash:base64:5]',
+      // modules: true,
+      // importLoaders: 2,
+      // localIndentName: '[name]-[local]-[hash:base64:5]',
       sourceMap: true,
-      minimize: true
+      // minimize: true
     };
 
     return {
       context: WebpackBaseConfig.srcPathAbsolute,
 
-      entry: './index.js',
+      entry: './index.ts',
 
       module: {
         rules: [
@@ -45,6 +45,12 @@ class WebpackBaseConfig {
             test: /\.js?$/,
             include: WebpackBaseConfig.srcPathAbsolute,
             use: ['babel-loader']
+          },
+          {
+            enforce: 'pre',
+            test: /\.ts?$/,
+            include: WebpackBaseConfig.srcPathAbsolute,
+            loader: 'babel-loader!ts-loader'
           },
           {
             test: /\.css$/,
@@ -91,7 +97,7 @@ class WebpackBaseConfig {
         alias: {
           config: `${WebpackBaseConfig.srcPathAbsolute}/config/${this.env}.js`
         },
-        extensions: ['.js', '.json'],
+        extensions: ['.js','.ts', '.json'],
         modules: [
           WebpackBaseConfig.srcPathAbsolute,
           'node_modules'

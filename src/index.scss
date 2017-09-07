@@ -1,0 +1,70 @@
+$dotWidth: 12;
+
+.canvasClip-beforeImg {
+  width: 100%;
+  height: 100%;
+  background: no-repeat center center /contain;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.canvasClip-afterImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+
+}
+
+.canvasClip-clipBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.canvasClip-dotBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px dashed #000;
+  box-sizing: border-box;
+}
+
+.canvasClip-dot {
+  position: absolute;
+  width: $dotWidth+px;
+  height: $dotWidth+px;
+  border: 1px solid #000;
+  box-sizing: border-box;
+
+  &-topLeft {
+    top: -$dotWidth /2 +px;
+    left: -$dotWidth /2 +px;
+    cursor: nw-resize;
+  }
+  &-topRight {
+    top: -$dotWidth /2 +px;
+    right: -$dotWidth /2 +px;
+    cursor: ne-resize;
+  }
+  &-bottomLeft {
+    left: -$dotWidth /2 +px;
+    bottom: -$dotWidth /2 +px;
+    cursor: sw-resize;
+  }
+  &-bottomRight {
+    right: -$dotWidth /2 +px;
+    bottom: -$dotWidth /2 +px;
+    cursor: se-resize;
+  }
+}

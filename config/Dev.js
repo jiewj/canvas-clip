@@ -12,7 +12,7 @@ class WebpackDevConfig extends WebpackBaseConfig {
       entry:[
         'webpack-dev-server/client?http://0.0.0.0:8000/',
         'webpack/hot/only-dev-server',
-        './index.js'
+        './index.ts'
         // vendor:'moment'
       ],
       devServer:{
@@ -37,6 +37,7 @@ class WebpackDevConfig extends WebpackBaseConfig {
         new webpack.HotModuleReplacementPlugin(),
         new htmlWebpackPlugin({
           template: 'index.html',
+          inject: 'head'
         })
         // new webpack.optimize.CommonsChunkPlugin({
         //   name: 'vendor',
