@@ -15,12 +15,27 @@
     </style>
 <body>
 <div class="test" id="test"></div>
+<input type="button" value="clip" onclick="Fun()"/>
+
 <script>
-  new CanvasClip({
+  var a =new CanvasClip({
     id: 'test',
     imgUrl: './e_bw.jpg',
-    scale: 2/1
+    scale: 2/1,
+    clipImgMinW: 200,
+    clipImgMinH:100
   });
+  function Fun(){
+    var img = document.getElementById('img');
+    if(img){
+      img.src = URL.createObjectURL(a.CanvasClipImg());
+    }else{
+      img = document.createElement('img');
+      img.id = 'img';
+      img.src = URL.createObjectURL(a.CanvasClipImg());
+      document.body.appendChild(img);
+    }
+  }
 </script>
 </body>
 </html>

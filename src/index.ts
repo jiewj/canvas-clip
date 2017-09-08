@@ -5,8 +5,8 @@
         clipBox: any,
         dotBox: any,
         clipImg: any,
-        clipImgW: number = 100,
-        clipImgH: number = 100,
+        clipImgW: number,
+        clipImgH: number,
         imgScale: any,
         transX: number = 0,
         transY: number = 0,
@@ -26,19 +26,19 @@
 
         constructor(ops: any) {
             this.config = Object.assign({}, this.config, ops);
-
-            console.log(this.config);
             let img = new Image;
             img.src = ops.imgUrl;
             parentEle = document.getElementById(ops.id);
-            console.dir(parentEle);
+            clipImgW = this.config.clipImgMinW;
+            clipImgH = this.config.clipImgMinH;
             img.onload = () => {
-                imgScale = img.width / img.height;
                 this.CreateHtml(ops.imgUrl);
-                if (imgScale >= 1) {
+                if (img.width / img.height >= 1) {
+                    imgScale = img.width / parentEle.clientWidth;
+
                     clipBox.style.width = parentEle.clientWidth + 'px';
-                    clipBox.style.height = parentEle.clientWidth / imgScale + 'px';
-                    this.imgClip();
+                    clipBox.style.height = img.height / imgScale + 'px';
+                    this.ImgClip();
                 } else {
 
                 }
@@ -77,48 +77,48 @@
                     moveY = e.pageY;
                     switch (id) {
                         case 'dotTopLeft':
-                            transX = Math.max(0,Math.min(transXStart + moveX - startX,clipImgWStart + transXStart - this.config.clipImgMinW));
-                            transY = Math.max(0,Math.min(transYStart + moveY - startY,clipImgHStart + transYStart - this.config.clipImgMinH));
+                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
+                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
 
-                            clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + startX - moveX,clipImgWStart + transXStart));
-                            clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + startY - moveY,clipImgHStart + transYStart));
+                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
+                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
 
-                            if(this.config.scale) {
+                            if (this.config.scale) {
                                 clipImgH = clipImgW / this.config.scale;
                                 transY = transYStart + clipImgHStart - clipImgH;
                             }
                             break;
                         case 'dotTopRight':
-                            transY = Math.max(0,Math.min(transYStart + moveY - startY,clipImgHStart + transYStart - this.config.clipImgMinH));
+                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
 
-                            clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + moveX - startX,clipBox.clientWidth - transX));
-                            clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + startY - moveY,clipImgHStart + transYStart));
+                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, clipBox.clientWidth - transX));
+                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
 
-                            if(this.config.scale) {
+                            if (this.config.scale) {
                                 clipImgH = clipImgW / this.config.scale;
                                 transY = transYStart + clipImgHStart - clipImgH;
                             }
                             break;
                         case 'dotBottomLeft':
-                            transX = Math.max(0,Math.min(transXStart + moveX - startX,clipImgWStart + transXStart - this.config.clipImgMinW));
+                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
 
-                            clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + startX - moveX,clipImgWStart + transXStart));
-                            clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + moveY - startY,clipBox.clientHeight - transY));
+                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
+                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, clipBox.clientHeight - transY));
 
-                            if(this.config.scale) clipImgH = clipImgW /this.config.scale;
+                            if (this.config.scale) clipImgH = clipImgW / this.config.scale;
                             break;
                         case 'dotBottomRight':
-                            clipImgW = Math.max(this.config.clipImgMinW,Math.min(clipImgWStart + moveX - startX,clipBox.clientWidth - transX));
-                            clipImgH = Math.max(this.config.clipImgMinH,Math.min(clipImgHStart + moveY - startY,clipBox.clientHeight - transY));
+                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, clipBox.clientWidth - transX));
+                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, clipBox.clientHeight - transY));
 
-                            if(this.config.scale) clipImgH = clipImgW /this.config.scale;
+                            if (this.config.scale) clipImgH = clipImgW / this.config.scale;
                             break;
                         default:
-                            transX = Math.max(0,Math.min(transXStart + moveX - startX,clipBox.clientWidth - dotBox.offsetWidth));
-                            transY = Math.max(0,Math.min(transYStart + moveY - startY,clipBox.clientHeight - dotBox.offsetHeight));
+                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipBox.clientWidth - dotBox.offsetWidth));
+                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipBox.clientHeight - dotBox.offsetHeight));
                             break;
                     }
-                    this.imgClip();
+                    this.ImgClip();
                 }
             });
             document.addEventListener('mouseup', (e: any) => {
@@ -127,13 +127,38 @@
                 console.log(canvasClipMouseDown);
 
             });
+            return this;
         }
 
-        imgClip() {
+        ImgClip() {
             dotBox.style.width = clipImgW + 'px';
             dotBox.style.height = clipImgH + 'px';
             dotBox.style.transform = `translate3d(${transX}px,${transY}px,0)`;
             clipImg.style.clip = `rect(${transY}px,${clipImgW + transX}px,${clipImgH + transY}px,${transX}px)`;
+            return this;
+        }
+
+        CanvasClipImg() {
+            let x = transX * imgScale,
+                y = transY * imgScale,
+                w = clipImgW * imgScale,
+                h = clipImgH * imgScale,
+                canvasBox = document.createElement('canvas'),
+                ctx = canvasBox.getContext('2d');
+
+            canvasBox.width = w;
+            canvasBox.height = h;
+            ctx.drawImage(clipImg, x, y, w, h, 0, 0, w, h);
+            let data = canvasBox.toDataURL();
+            data = data.split(',')[1];
+            data = window.atob(data);
+            let ia = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                ia[i] = data.charCodeAt(i);
+            }
+            let blob = new Blob([ia], {type: "image/png"});
+            console.log(blob);
+            return blob;
         }
 
         CreateHtml(imgUrl: any) {
