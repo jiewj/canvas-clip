@@ -1,154 +1,153 @@
-;(function () {
-    'use strict';
-    require('./index.scss');
-    let parentEle: any,
-        clipBox: any,
-        dotBox: any,
-        clipBgImg: any,
-        clipImg: any,
-        clipImgW: number,
-        clipImgH: number,
-        imgScale: any,
-        transX: number,
-        transY: number,
-        dotTopLeft: any,
-        dotTopRight: any,
-        dotBottomLeft: any,
-        dotBottomRight: any,
-        img = new Image;
+'use strict';
+class CanvasClip {
+    config: any = {
+        id: '',
+        imgUrl: '',
+        scale: null,
+        clipImgMinW: 100,
+        clipImgMinH: 100
+    };
+    parentEle: any;
+    clipBox: any;
+    dotBox: any;
+    clipBgImg: any;
+    clipImg: any;
+    clipImgW: number;
+    clipImgH: number;
+    imgScale: any;
+    transX: number;
+    transY: number;
+    dotTopLeft: any;
+    dotTopRight: any;
+    dotBottomLeft: any;
+    dotBottomRight: any;
+    img = new Image;
 
-    class CanvasClip {
-        config: any = {
-            id: '',
-            imgUrl: '',
-            scale: null,
-            clipImgMinW: 100,
-            clipImgMinH: 100
+    constructor(ops: any) {
+        require('./index.scss');
+        this.config = Object.assign({}, this.config, ops);
+        this.parentEle = document.getElementById(this.config.id);
+        this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl).DragEvent();
+        return this;
+    }
+
+    ImgUrl(imgUrl: any) {
+        this.img.src = imgUrl;
+        this.clipImgW = this.config.clipImgMinW;
+        this.clipImgH = this.config.clipImgMinH;
+        this.transX = 0;
+        this.transY = 0;
+        this.img.onload = () => {
+            this.clipBgImg.style.backgroundImage = `url(${imgUrl})`;
+            this.clipImg.src = imgUrl;
+            if (this.img.width / this.img.height >= 1) {
+                this.imgScale = this.img.width / this.parentEle.clientWidth;
+
+                this.clipImg.style.width = this.parentEle.clientWidth + 'px';
+                this.clipBox.style.width = this.parentEle.clientWidth + 'px';
+                this.clipBox.style.height = this.img.height / this.imgScale + 'px';
+            } else {
+                this.imgScale = this.img.height / this.parentEle.clientHeight;
+
+                this.clipImg.style.width = this.img.width / this.imgScale + 'px';
+                this.clipBox.style.width = this.img.width / this.imgScale + 'px';
+                this.clipBox.style.height = this.parentEle.clientHeight + 'px';
+            }
+            this.ImgClip();
         };
+        return this;
+    }
 
-        constructor(ops: any) {
-            this.config = Object.assign({}, this.config, ops);
-            parentEle = document.getElementById(this.config.id);
-            this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl).DragEvent();
-        }
+    DragEvent() {
+        let startX: number,
+            startY: number,
+            moveX: number,
+            moveY: number,
+            transXStart: number,
+            transYStart: number,
+            clipImgWStart: number,
+            clipImgHStart: number,
+            canvasClipMouseDown: boolean = false,
+            id: any;
 
-        ImgUrl(imgUrl: any) {
-            img.src = imgUrl;
-            clipImgW = this.config.clipImgMinW;
-            clipImgH = this.config.clipImgMinH;
-            transX = 0;
-            transY = 0;
-            img.onload = () => {
-                clipBgImg.style.backgroundImage = `url(${imgUrl})`;
-                clipImg.src = imgUrl;
-                if (img.width / img.height >= 1) {
-                    imgScale = img.width / parentEle.clientWidth;
+        this.dotBox.addEventListener('mousedown', (e: any) => {
+            e.preventDefault();
+            startX = e.pageX;
+            startY = e.pageY;
+            transXStart = this.transX;
+            transYStart = this.transY;
+            clipImgWStart = this.clipImgW;
+            clipImgHStart = this.clipImgH;
+            canvasClipMouseDown = true;
 
-                    clipImg.style.width = parentEle.clientWidth + 'px';
-                    clipBox.style.width = parentEle.clientWidth + 'px';
-                    clipBox.style.height = img.height / imgScale + 'px';
-                } else {
-                    imgScale = img.height / parentEle.clientHeight;
+            id = e.target.id;
+        });
 
-                    clipImg.style.width = img.width / imgScale + 'px';
-                    clipBox.style.width = img.width / imgScale + 'px';
-                    clipBox.style.height = parentEle.clientHeight + 'px';
+        document.addEventListener('mousemove', (e: any) => {
+            if (canvasClipMouseDown) {
+                moveX = e.pageX;
+                moveY = e.pageY;
+                switch (id) {
+                    case 'dotTopLeft':
+                        this.transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
+                        this.transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
+
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
+
+                        if (this.config.scale) {
+                            this.clipImgH = this.clipImgW / this.config.scale;
+                            this.transY = transYStart + clipImgHStart - this.clipImgH;
+                        }
+                        break;
+                    case 'dotTopRight':
+                        this.transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
+
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, this.clipBox.clientWidth - this.transX));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
+
+                        if (this.config.scale) {
+                            this.clipImgH = this.clipImgW / this.config.scale;
+                            this.transY = transYStart + clipImgHStart - this.clipImgH;
+                        }
+                        break;
+                    case 'dotBottomLeft':
+                        this.transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
+
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, this.clipBox.clientHeight - this.transY));
+
+                        if (this.config.scale) this.clipImgH = this.clipImgW / this.config.scale;
+                        break;
+                    case 'dotBottomRight':
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, this.clipBox.clientWidth - this.transX));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, this.clipBox.clientHeight - this.transY));
+
+                        if (this.config.scale) this.clipImgH = this.clipImgW / this.config.scale;
+                        break;
+                    default:
+                        this.transX = Math.max(0, Math.min(transXStart + moveX - startX, this.clipBox.clientWidth - this.dotBox.offsetWidth));
+                        this.transY = Math.max(0, Math.min(transYStart + moveY - startY, this.clipBox.clientHeight - this.dotBox.offsetHeight));
+                        break;
                 }
                 this.ImgClip();
-            };
-            return this;
-        }
+            }
+        });
+        document.addEventListener('mouseup', () => {
+            canvasClipMouseDown = false;
+        });
+    }
 
-        DragEvent() {
-            let startX: number,
-                startY: number,
-                moveX: number,
-                moveY: number,
-                transXStart: number,
-                transYStart: number,
-                clipImgWStart: number,
-                clipImgHStart: number,
-                canvasClipMouseDown: boolean = false,
-                id: any;
+    ImgClip() {
+        this.dotBox.style.width = this.clipImgW + 'px';
+        this.dotBox.style.height = this.clipImgH + 'px';
+        this.dotBox.style.transform = `translate3d(${this.transX}px,${this.transY}px,0)`;
+        this.clipImg.style.clip = `rect(${this.transY}px,${this.clipImgW + this.transX}px,${this.clipImgH + this.transY}px,${this.transX}px)`;
+        return this;
+    }
 
-            dotBox.addEventListener('mousedown', (e: any) => {
-                e.preventDefault();
-                startX = e.pageX;
-                startY = e.pageY;
-                transXStart = transX;
-                transYStart = transY;
-                clipImgWStart = clipImgW;
-                clipImgHStart = clipImgH;
-                canvasClipMouseDown = true;
-
-                id = e.target.id;
-            });
-
-            document.addEventListener('mousemove', (e: any) => {
-                if (canvasClipMouseDown) {
-                    moveX = e.pageX;
-                    moveY = e.pageY;
-                    switch (id) {
-                        case 'dotTopLeft':
-                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
-                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
-
-                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
-                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
-
-                            if (this.config.scale) {
-                                clipImgH = clipImgW / this.config.scale;
-                                transY = transYStart + clipImgHStart - clipImgH;
-                            }
-                            break;
-                        case 'dotTopRight':
-                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipImgHStart + transYStart - this.config.clipImgMinH));
-
-                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, clipBox.clientWidth - transX));
-                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + startY - moveY, clipImgHStart + transYStart));
-
-                            if (this.config.scale) {
-                                clipImgH = clipImgW / this.config.scale;
-                                transY = transYStart + clipImgHStart - clipImgH;
-                            }
-                            break;
-                        case 'dotBottomLeft':
-                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipImgWStart + transXStart - this.config.clipImgMinW));
-
-                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + startX - moveX, clipImgWStart + transXStart));
-                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, clipBox.clientHeight - transY));
-
-                            if (this.config.scale) clipImgH = clipImgW / this.config.scale;
-                            break;
-                        case 'dotBottomRight':
-                            clipImgW = Math.max(this.config.clipImgMinW, Math.min(clipImgWStart + moveX - startX, clipBox.clientWidth - transX));
-                            clipImgH = Math.max(this.config.clipImgMinH, Math.min(clipImgHStart + moveY - startY, clipBox.clientHeight - transY));
-
-                            if (this.config.scale) clipImgH = clipImgW / this.config.scale;
-                            break;
-                        default:
-                            transX = Math.max(0, Math.min(transXStart + moveX - startX, clipBox.clientWidth - dotBox.offsetWidth));
-                            transY = Math.max(0, Math.min(transYStart + moveY - startY, clipBox.clientHeight - dotBox.offsetHeight));
-                            break;
-                    }
-                    this.ImgClip();
-                }
-            });
-            document.addEventListener('mouseup', () => {
-                canvasClipMouseDown = false;
-            });
-        }
-
-        ImgClip() {
-            dotBox.style.width = clipImgW + 'px';
-            dotBox.style.height = clipImgH + 'px';
-            dotBox.style.transform = `translate3d(${transX}px,${transY}px,0)`;
-            clipImg.style.clip = `rect(${transY}px,${clipImgW + transX}px,${clipImgH + transY}px,${transX}px)`;
-            return this;
-        }
-
-        CreateHtml(imgUrl: any) {
-            parentEle.innerHTML = `
+    CreateHtml(imgUrl: any) {
+        this.parentEle.innerHTML = `
 <div class="canvasClip-beforeImg" style="background-image: url(${imgUrl})"></div>
 <img class="canvasClip-afterImg" src="${imgUrl}"/>
 <div class="canvasClip-clipBox">
@@ -160,41 +159,39 @@
     </div>
 </div>
 `;
-            clipBgImg = document.getElementsByClassName('canvasClip-beforeImg')[0];
-            clipImg = document.getElementsByClassName('canvasClip-afterImg')[0];
-            clipBox = document.getElementsByClassName('canvasClip-clipBox')[0];
-            dotBox = document.getElementsByClassName('canvasClip-dotBox')[0];
-            dotTopLeft = document.getElementById('dotTopLeft');
-            dotTopRight = document.getElementById('dotTopRight');
-            dotBottomLeft = document.getElementById('dotBottomLeft');
-            dotBottomRight = document.getElementById('dotBottomRight');
-            return this;
-        }
-
-        CanvasClipImg() {
-            let x = transX * imgScale,
-                y = transY * imgScale,
-                w = clipImgW * imgScale,
-                h = clipImgH * imgScale,
-                canvasBox = document.createElement('canvas'),
-                ctx = canvasBox.getContext('2d');
-
-            canvasBox.width = w;
-            canvasBox.height = h;
-            ctx.drawImage(clipImg, x, y, w, h, 0, 0, w, h);
-            let data = canvasBox.toDataURL();
-            data = data.split(',')[1];
-            data = window.atob(data);
-            let ia = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                ia[i] = data.charCodeAt(i);
-            }
-            let blob = new Blob([ia], {type: "image/png"});
-            console.log(blob);
-            return blob;
-        }
+        this.clipBgImg = document.getElementsByClassName('canvasClip-beforeImg')[0];
+        this.clipImg = document.getElementsByClassName('canvasClip-afterImg')[0];
+        this.clipBox = document.getElementsByClassName('canvasClip-clipBox')[0];
+        this.dotBox = document.getElementsByClassName('canvasClip-dotBox')[0];
+        this.dotTopLeft = document.getElementById('dotTopLeft');
+        this.dotTopRight = document.getElementById('dotTopRight');
+        this.dotBottomLeft = document.getElementById('dotBottomLeft');
+        this.dotBottomRight = document.getElementById('dotBottomRight');
+        return this;
     }
 
-    (<any> window).CanvasClip = CanvasClip;
-})();
+    CanvasClipImg() {
+        let x = this.transX * this.imgScale,
+            y = this.transY * this.imgScale,
+            w = this.clipImgW * this.imgScale,
+            h = this.clipImgH * this.imgScale,
+            canvasBox = document.createElement('canvas'),
+            ctx = canvasBox.getContext('2d');
 
+        canvasBox.width = w;
+        canvasBox.height = h;
+        ctx.drawImage(this.clipImg, x, y, w, h, 0, 0, w, h);
+        let data = canvasBox.toDataURL();
+        data = data.split(',')[1];
+        data = window.atob(data);
+        let ia = new Uint8Array(data.length);
+        for (let i = 0; i < data.length; i++) {
+            ia[i] = data.charCodeAt(i);
+        }
+        let blob = new Blob([ia], {type: "image/png"});
+        console.log(blob);
+        return blob;
+    }
+}
+
+export default CanvasClip;

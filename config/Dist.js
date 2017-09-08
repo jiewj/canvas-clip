@@ -11,9 +11,10 @@ class WebpackDistConfig extends WebpackBaseConfig {
     this.config = {
       cache: false,
       devtool: 'source-map',
-      entry: [
-        './index.ts'
-      ],
+      entry: {
+        'canvas-clip':'./index.ts',
+        test:'./test.ts'
+      },
       plugins: [
         new webpack.DefinePlugin({
           'process.env.NODE_ENV': '"production"'
@@ -22,7 +23,6 @@ class WebpackDistConfig extends WebpackBaseConfig {
         new webpack.NoEmitOnErrorsPlugin(),
         new htmlWebpackPlugin({
           template: 'index.html',
-          inject: 'head',
           minify: {
             removeComments: true
           }

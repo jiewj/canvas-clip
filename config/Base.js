@@ -36,7 +36,7 @@ class WebpackBaseConfig {
     return {
       context: WebpackBaseConfig.srcPathAbsolute,
 
-      entry: './index.ts',
+      entry: './[name].ts',
 
       module: {
         rules: [
@@ -81,14 +81,17 @@ class WebpackBaseConfig {
               },
               {loader: 'sass-loader'}
             ]
+          },
+          {
+            test:/\.(png|jpg)$/,
+            use:['file-loader']
           }
         ]
       },
 
       output: {
         path: path.resolve('./dist'),
-        // filename: 'js/canvas-clip.js',
-        filename: 'js/index.[hash].js',
+        filename: 'js/[name].js',
         //[name].[chunkhash].js
         // publicPath: 'http://club.com/'
       },

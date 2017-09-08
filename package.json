@@ -41,6 +41,7 @@
     "webpack-dev-server": "^2.6.1"
   },
   "dependencies": {
+    "file-loader": "^0.11.2",
     "webpack": "^3.4.1"
   }
 }
