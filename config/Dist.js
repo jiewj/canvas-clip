@@ -22,6 +22,7 @@ class WebpackDistConfig extends WebpackBaseConfig {
         new webpack.NoEmitOnErrorsPlugin(),
         new htmlWebpackPlugin({
           template: 'index.html',
+          inject:'head',
           minify: {
             removeComments: true
           }
