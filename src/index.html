@@ -16,20 +16,29 @@
 <body>
 <div class="test" id="test"></div>
 <input type="button" value="clip" onclick="Fun()"/>
-
+<select id="select">
+    <option value="./e_bw.jpg">横图</option>
+    <option value="./tooopen.jpg">竖图</option>
+</select>
 <script>
-  var a =new CanvasClip({
+  var a = new CanvasClip({
     id: 'test',
     imgUrl: './e_bw.jpg',
-    scale: 2/1,
+    scale: 2 / 1,
     clipImgMinW: 200,
-    clipImgMinH:100
+    clipImgMinH: 100
   });
-  function Fun(){
+  console.log(a);
+  document.getElementById('select').addEventListener('change', function () {
+    a.config.imgUrl = this.value;
+    a.ImgUrl(this.value);
+  });
+
+  function Fun() {
     var img = document.getElementById('img');
-    if(img){
+    if (img) {
       img.src = URL.createObjectURL(a.CanvasClipImg());
-    }else{
+    } else {
       img = document.createElement('img');
       img.id = 'img';
       img.src = URL.createObjectURL(a.CanvasClipImg());

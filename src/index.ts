@@ -4,16 +4,18 @@
     let parentEle: any,
         clipBox: any,
         dotBox: any,
+        clipBgImg:any,
         clipImg: any,
         clipImgW: number,
         clipImgH: number,
         imgScale: any,
-        transX: number = 0,
-        transY: number = 0,
+        transX: number,
+        transY: number,
         dotTopLeft: any,
         dotTopRight: any,
         dotBottomLeft: any,
-        dotBottomRight: any;
+        dotBottomRight: any,
+        img = new Image;
 
     class CanvasClip {
         config: any = {
@@ -26,23 +28,34 @@
 
         constructor(ops: any) {
             this.config = Object.assign({}, this.config, ops);
-            let img = new Image;
-            img.src = ops.imgUrl;
-            parentEle = document.getElementById(ops.id);
+            parentEle = document.getElementById(this.config.id);
+            this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl);
+            this.DragEvent();
+        }
+
+        ImgUrl(imgUrl:any){
+            img.src = imgUrl;
             clipImgW = this.config.clipImgMinW;
             clipImgH = this.config.clipImgMinH;
+            transX = 0;
+            transY = 0;
             img.onload = () => {
-                this.CreateHtml(ops.imgUrl);
+                clipBgImg.style.backgroundImage = `url(${imgUrl})`;
+                clipImg.src = imgUrl;
                 if (img.width / img.height >= 1) {
                     imgScale = img.width / parentEle.clientWidth;
 
+                    clipImg.style.width = parentEle.clientWidth + 'px';
                     clipBox.style.width = parentEle.clientWidth + 'px';
                     clipBox.style.height = img.height / imgScale + 'px';
-                    this.ImgClip();
                 } else {
+                    imgScale = img.height / parentEle.clientHeight;
 
+                    clipImg.style.width = img.width / imgScale + 'px';
+                    clipBox.style.width = img.width / imgScale + 'px';
+                    clipBox.style.height = parentEle.clientHeight + 'px';
                 }
-                this.DragEvent();
+                this.ImgClip();
             };
         }
 
@@ -121,11 +134,8 @@
                     this.ImgClip();
                 }
             });
-            document.addEventListener('mouseup', (e: any) => {
-                console.log(transX, transY, clipImgW, clipImgH);
+            document.addEventListener('mouseup', () => {
                 canvasClipMouseDown = false;
-                console.log(canvasClipMouseDown);
-
             });
             return this;
         }
@@ -174,7 +184,7 @@
     </div>
 </div>
 `;
-
+            clipBgImg = document.getElementsByClassName('canvasClip-beforeImg')[0];
             clipImg = document.getElementsByClassName('canvasClip-afterImg')[0];
             clipBox = document.getElementsByClassName('canvasClip-clipBox')[0];
             dotBox = document.getElementsByClassName('canvasClip-dotBox')[0];
