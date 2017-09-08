@@ -4,7 +4,7 @@
     let parentEle: any,
         clipBox: any,
         dotBox: any,
-        clipBgImg:any,
+        clipBgImg: any,
         clipImg: any,
         clipImgW: number,
         clipImgH: number,
@@ -29,11 +29,10 @@
         constructor(ops: any) {
             this.config = Object.assign({}, this.config, ops);
             parentEle = document.getElementById(this.config.id);
-            this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl);
-            this.DragEvent();
+            this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl).DragEvent();
         }
 
-        ImgUrl(imgUrl:any){
+        ImgUrl(imgUrl: any) {
             img.src = imgUrl;
             clipImgW = this.config.clipImgMinW;
             clipImgH = this.config.clipImgMinH;
@@ -57,6 +56,7 @@
                 }
                 this.ImgClip();
             };
+            return this;
         }
 
         DragEvent() {
@@ -137,7 +137,6 @@
             document.addEventListener('mouseup', () => {
                 canvasClipMouseDown = false;
             });
-            return this;
         }
 
         ImgClip() {
@@ -146,29 +145,6 @@
             dotBox.style.transform = `translate3d(${transX}px,${transY}px,0)`;
             clipImg.style.clip = `rect(${transY}px,${clipImgW + transX}px,${clipImgH + transY}px,${transX}px)`;
             return this;
-        }
-
-        CanvasClipImg() {
-            let x = transX * imgScale,
-                y = transY * imgScale,
-                w = clipImgW * imgScale,
-                h = clipImgH * imgScale,
-                canvasBox = document.createElement('canvas'),
-                ctx = canvasBox.getContext('2d');
-
-            canvasBox.width = w;
-            canvasBox.height = h;
-            ctx.drawImage(clipImg, x, y, w, h, 0, 0, w, h);
-            let data = canvasBox.toDataURL();
-            data = data.split(',')[1];
-            data = window.atob(data);
-            let ia = new Uint8Array(data.length);
-            for (let i = 0; i < data.length; i++) {
-                ia[i] = data.charCodeAt(i);
-            }
-            let blob = new Blob([ia], {type: "image/png"});
-            console.log(blob);
-            return blob;
         }
 
         CreateHtml(imgUrl: any) {
@@ -193,6 +169,29 @@
             dotBottomLeft = document.getElementById('dotBottomLeft');
             dotBottomRight = document.getElementById('dotBottomRight');
             return this;
+        }
+
+        CanvasClipImg() {
+            let x = transX * imgScale,
+                y = transY * imgScale,
+                w = clipImgW * imgScale,
+                h = clipImgH * imgScale,
+                canvasBox = document.createElement('canvas'),
+                ctx = canvasBox.getContext('2d');
+
+            canvasBox.width = w;
+            canvasBox.height = h;
+            ctx.drawImage(clipImg, x, y, w, h, 0, 0, w, h);
+            let data = canvasBox.toDataURL();
+            data = data.split(',')[1];
+            data = window.atob(data);
+            let ia = new Uint8Array(data.length);
+            for (let i = 0; i < data.length; i++) {
+                ia[i] = data.charCodeAt(i);
+            }
+            let blob = new Blob([ia], {type: "image/png"});
+            console.log(blob);
+            return blob;
         }
     }
 
