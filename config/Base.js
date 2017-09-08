@@ -87,7 +87,9 @@ class WebpackBaseConfig {
 
       output: {
         path: path.resolve('./dist'),
-        filename: 'js/index.[hash].js', //[name].[chunkhash].js
+        // filename: 'js/canvas-clip.js',
+        filename: 'js/index.[hash].js',
+        //[name].[chunkhash].js
         // publicPath: 'http://club.com/'
       },
 
