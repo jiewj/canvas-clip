@@ -21,7 +21,7 @@ var canvasClip = new CanvasClip({
   });
 ```
 
-### 更新图片地址
+### 更换图片地址
 ``` javascript
 canvasClip.ImgUrl('图片url');
 ```
