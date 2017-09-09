@@ -1,3 +1,4 @@
+
 import CanvasClip from './index';
 // let CanvasClip = require('./index').default;
 
@@ -19,8 +20,8 @@ document.body.appendChild(select);
 let test = new CanvasClip({
     id: 'test',
     imgUrl: img1,
-    scale: 2 / 1,
-    clipImgMinW: 200,
+    scale: 3 / 2,
+    clipImgMinW: 150,
     clipImgMinH: 100
 });
 console.dir(test);
