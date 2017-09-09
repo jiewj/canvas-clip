@@ -11,9 +11,22 @@
 > 或 `<script src="./js/canvas-clip.js"><script>`
 
 ### 初始化
+``` html
+<div id="idname" class="classname"><div>
+```
+
+``` css
+.classname{
+    position: relative;
+    width: 500px;
+    htight: 500px;
+    ...
+}
+```
+
 ``` javascript
 var canvasClip = new CanvasClip({
-    id: 'id名',
+    id: 'idname',
     imgUrl: '图片地址',
     scale: 2 / 1, // 比例 默认null
     clipImgMinW: 200, // 最小宽度 默认100
