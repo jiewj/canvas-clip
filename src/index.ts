@@ -88,69 +88,81 @@ class CanvasClip {
             if (canvasClipMouseDown) {
                 moveX = e.pageX;
                 moveY = e.pageY;
-                let x: number, y: number, w: number, h: number;
+                let x: number, y: number, w: number, h: number, wMax: number, hMax: number;
                 switch (id) {
                     case 'dotTopLeft':
-                        if (this.config.scale) {
-                            if (this.clipImgW >= clipImgWStart + transXStart) break;
-                            if (this.clipImgH >= clipImgHStart + transYStart) break;
-                        }
                         x = transXStart + moveX - startX;
                         y = transYStart + moveY - startY;
                         w = clipImgWStart + startX - moveX;
                         h = clipImgHStart + startY - moveY;
-                        this.transX = Math.max(0, Math.min(x, clipImgWStart + transXStart - this.config.clipImgMinW));
-                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, clipImgWStart + transXStart));
+                        wMax = clipImgWStart + transXStart;
+                        hMax = clipImgHStart + transYStart;
+                        if (this.config.scale) {
+                            h = w / this.config.scale;
+                            if (wMax / this.config.scale > hMax) wMax = hMax * this.config.scale;
+                            else hMax = wMax / this.config.scale;
+                        }
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, wMax));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, hMax));
 
                         if (this.config.scale) {
-                            h = this.clipImgW / this.config.scale;
-                            y = transYStart + clipImgHStart - h;
+                            x = transXStart + clipImgWStart - this.clipImgW;
+                            y = transYStart + clipImgHStart - this.clipImgH;
                         }
+                        this.transX = Math.max(0, Math.min(x, clipImgWStart + transXStart - this.config.clipImgMinW));
                         this.transY = Math.max(0, Math.min(y, clipImgHStart + transYStart - this.config.clipImgMinH));
-                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, clipImgHStart + transYStart));
                         break;
                     case 'dotTopRight':
-                        if (this.config.scale) {
-                            if (this.clipImgW >= this.clipBox.clientWidth - this.transX) break;
-                            if (this.clipImgH >= clipImgHStart + transYStart) break;
-                        }
                         y = transYStart + moveY - startY;
                         w = clipImgWStart + moveX - startX;
                         h = clipImgHStart + startY - moveY;
-                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, this.clipBox.clientWidth - this.transX));
+                        wMax = this.clipBox.clientWidth - this.transX;
+                        hMax = clipImgHStart + transYStart;
+                        if (this.config.scale) {
+                            h = w / this.config.scale;
+                            if (wMax / this.config.scale > hMax) wMax = hMax * this.config.scale;
+                            else hMax = wMax / this.config.scale;
+                        }
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, wMax));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, hMax));
 
                         if (this.config.scale) {
-                            h = this.clipImgW / this.config.scale;
-                            y = transYStart + clipImgHStart - h;
+                            y = transYStart + clipImgHStart - this.clipImgH;
                         }
-                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, clipImgHStart + transYStart));
                         this.transY = Math.max(0, Math.min(y, clipImgHStart + transYStart - this.config.clipImgMinH));
                         break;
                     case 'dotBottomLeft':
-                        if (this.config.scale) {
-                            if (this.clipImgW >= clipImgWStart + transXStart) break;
-                            if (this.clipImgH >= this.clipBox.clientHeight - this.transY) break;
-                        }
                         x = transXStart + moveX - startX;
                         w = clipImgWStart + startX - moveX;
                         h = clipImgHStart + moveY - startY;
-                        this.transX = Math.max(0, Math.min(x, clipImgWStart + transXStart - this.config.clipImgMinW));
-                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, clipImgWStart + transXStart));
+                        wMax = clipImgWStart + transXStart;
+                        hMax = this.clipBox.clientHeight - this.transY;
+                        if (this.config.scale) {
+                            h = w / this.config.scale;
+                            if (wMax / this.config.scale > hMax) wMax = hMax * this.config.scale;
+                            else hMax = wMax / this.config.scale;
+                        }
 
-                        if (this.config.scale) h = this.clipImgW / this.config.scale;
-                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, this.clipBox.clientHeight - this.transY));
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, wMax));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, hMax));
+
+                        if (this.config.scale) {
+                            x = transXStart + clipImgWStart - this.clipImgW;
+                        }
+                        this.transX = Math.max(0, Math.min(x, clipImgWStart + transXStart - this.config.clipImgMinW));
                         break;
                     case 'dotBottomRight':
-                        if (this.config.scale) {
-                            if (this.clipImgW >= this.clipBox.clientWidth - this.transX) break;
-                            if (this.clipImgH >= this.clipBox.clientHeight - this.transY) break;
-                        }
                         w = clipImgWStart + moveX - startX;
                         h = clipImgHStart + moveY - startY;
-                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, this.clipBox.clientWidth - this.transX));
-
-                        if (this.config.scale) h = this.clipImgW / this.config.scale;
-                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, this.clipBox.clientHeight - this.transY));
+                        wMax = this.clipBox.clientWidth - this.transX;
+                        hMax = this.clipBox.clientHeight - this.transY;
+                        if (this.config.scale) {
+                            h = w / this.config.scale;
+                            if (wMax / this.config.scale > hMax) wMax = hMax * this.config.scale;
+                            else hMax = wMax / this.config.scale;
+                        }
+                        this.clipImgW = Math.max(this.config.clipImgMinW, Math.min(w, wMax));
+                        this.clipImgH = Math.max(this.config.clipImgMinH, Math.min(h, hMax));
                         break;
                     default:
                         x = transXStart + moveX - startX;
