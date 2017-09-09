@@ -2,6 +2,8 @@
 
 [**预览地址**](https://jiewj.github.io/canvas-clip/)
 
+[canvas-clip.js](./dist/)
+
 ### 使用方法
 
 > **注意**：本地图片先上传到服务器在进行裁剪
