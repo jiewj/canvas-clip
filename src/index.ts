@@ -27,19 +27,23 @@ class CanvasClip {
         require('./index.scss');
         this.config = Object.assign({}, this.config, ops);
         this.parentEle = document.getElementById(this.config.id);
-        this.CreateHtml(this.config.imgUrl).ImgUrl(this.config.imgUrl).DragEvent();
+        this.ImgUrl(this.config.imgUrl,this.CreateHtml(this.config.imgUrl)).DragEvent();
         return this;
     }
 
-    ImgUrl(imgUrl: any) {
+    ImgUrl(imgUrl: any,callback?:any) {
         this.img.src = imgUrl;
         this.clipImgW = this.config.clipImgMinW;
         this.clipImgH = this.config.clipImgMinH;
         this.transX = 0;
         this.transY = 0;
         this.img.onload = () => {
-            this.clipBgImg.style.backgroundImage = `url(${imgUrl})`;
-            this.clipImg.src = imgUrl;
+            if(callback){
+                callback;
+            } else{
+                this.clipBgImg.style.backgroundImage = `url(${imgUrl})`;
+                this.clipImg.src = imgUrl;
+            }
             if (this.img.width / this.img.height >= 1) {
                 this.imgScale = this.img.width / this.parentEle.clientWidth;
 
