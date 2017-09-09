@@ -4,7 +4,7 @@ import CanvasClip from './index';
 let img1 = require('./e_bw.jpg');
 let img2 = require('./tooopen.jpg');
 
-console.dir(CanvasClip);
+// console.dir(CanvasClip);
 let html = `
 <div class="test" id="test"></div>
 <input type="button" value="clip" id="clip"/>

@@ -144,7 +144,8 @@ class CanvasClip {
     ImgClip() {
         this.dotBox.style.width = this.clipImgW + 'px';
         this.dotBox.style.height = this.clipImgH + 'px';
-        this.dotBox.style.transform = `translate3d(${this.transX}px,${this.transY}px,0)`;
+        this.dotBox.style.transform = `translate(${this.transX}px,${this.transY}px)`;
+        this.dotBox.style.msTransform = `translate(${this.transX}px,${this.transY}px)`;
         this.clipImg.style.clip = `rect(${this.transY}px,${this.clipImgW + this.transX}px,${this.clipImgH + this.transY}px,${this.transX}px)`;
         return this;
     }
@@ -196,5 +197,5 @@ class CanvasClip {
         return blob;
     }
 }
-
+(<any> window).CanvasClip = CanvasClip;
 export default CanvasClip;
