@@ -40,6 +40,7 @@ class WebpackDevConfig extends WebpackBaseConfig {
         new webpack.HotModuleReplacementPlugin(),
         new htmlWebpackPlugin({
           template: 'index.html',
+          chunks: ['test']
         })
         // new webpack.optimize.CommonsChunkPlugin({
         //   name: 'vendor',
