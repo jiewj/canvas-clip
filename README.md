@@ -2,7 +2,7 @@
 
 [**预览地址**](https://jiewj.github.io/canvas-clip/)
 
-[canvas-clip.js](./dist/)
+[canvas-clip.js](./dist/js/)
 
 ### 使用方法
 
