@@ -2,6 +2,7 @@
   "name": "canvas-clip",
   "version": "1.0.0",
   "description": "canvas clip",
+  "author": "jiewj",
   "main": "index.ts",
   "repository": {
     "type": "git",
@@ -18,9 +19,7 @@
     "serve:dist": "webpack-dev-server --open --env dist -p --progress",
     "start": "npm run serve:dev"
   },
-  "author": "jiewj",
-  "license": "MIT",
-  "devDependencies": {
+  "dependencies": {
     "@types/node": "^8.0.17",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
@@ -29,6 +28,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "copyfiles": "^1.2.0",
     "css-loader": "^0.28.4",
+    "file-loader": "^0.11.2",
     "html-webpack-plugin": "^2.29.0",
     "node-sass": "^4.5.3",
     "postcss-loader": "^2.0.6",
@@ -38,10 +38,10 @@
     "style-loader": "^0.18.2",
     "ts-loader": "^2.3.2",
     "typescript": "^2.4.2",
+    "webpack": "^3.4.1"
+  },
+  "devDependencies": {
     "webpack-dev-server": "^2.6.1"
   },
-  "dependencies": {
-    "file-loader": "^0.11.2",
-    "webpack": "^3.4.1"
-  }
+  "license": "MIT"
 }
