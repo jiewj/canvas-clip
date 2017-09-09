@@ -27,7 +27,7 @@ class CanvasClip {
         require('./index.scss');
         this.config = Object.assign({}, this.config, ops);
         this.parentEle = document.getElementById(this.config.id);
-        this.ImgUrl(this.config.imgUrl,this.CreateHtml(this.config.imgUrl)).DragEvent();
+        this.ImgUrl(this.config.imgUrl,this.CreateHtml()).DragEvent();
         return this;
     }
 
@@ -38,12 +38,8 @@ class CanvasClip {
         this.transX = 0;
         this.transY = 0;
         this.img.onload = () => {
-            if(callback){
-                callback;
-            } else{
-                this.clipBgImg.style.backgroundImage = `url(${imgUrl})`;
-                this.clipImg.src = imgUrl;
-            }
+            if(callback) callback;
+
             if (this.img.width / this.img.height >= 1) {
                 this.imgScale = this.img.width / this.parentEle.clientWidth;
 
@@ -57,6 +53,9 @@ class CanvasClip {
                 this.clipBox.style.width = this.img.width / this.imgScale + 'px';
                 this.clipBox.style.height = this.parentEle.clientHeight + 'px';
             }
+            this.clipBgImg.style.backgroundImage = `url(${imgUrl})`;
+            this.clipImg.src = imgUrl;
+
             this.ImgClip();
         };
         return this;
@@ -150,10 +149,10 @@ class CanvasClip {
         return this;
     }
 
-    CreateHtml(imgUrl: any) {
+    CreateHtml() {
         this.parentEle.innerHTML = `
-<div class="canvasClip-beforeImg" style="background-image: url(${imgUrl})"></div>
-<img class="canvasClip-afterImg" src="${imgUrl}"/>
+<div class="canvasClip-beforeImg"></div>
+<img class="canvasClip-afterImg" src=""/>
 <div class="canvasClip-clipBox">
     <div class="canvasClip-dotBox">
       <div id="dotTopLeft" class="canvasClip-dot canvasClip-dot-topLeft"></div>

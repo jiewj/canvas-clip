@@ -91,7 +91,7 @@ class WebpackBaseConfig {
 
       output: {
         path: path.resolve('./dist'),
-        filename: 'js/[name].[hash].js',
+        filename: 'js/[name].js',
         //[name].[chunkhash].js
         // publicPath: 'http://club.com/'
       },
