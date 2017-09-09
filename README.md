@@ -3,13 +3,11 @@
 [**预览地址**](https://jiewj.github.io/canvas-clip/)
 
 > **提醒**：本地图片先上传到服务器在进行裁剪
-
 >
-
 > 可 `import CanvasClip from './canvas-clip';`
-
+>
 > 或 `let CanvasClip = require('./canvas-clip').default;`
-
+>
 > 或 `<script src="./js/canvas-clip.js"><script>`
 
 ### 初始化
